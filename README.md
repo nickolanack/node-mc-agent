@@ -4,10 +4,13 @@
 *node-minecraft-agent requires the updated minecraft-protocol (npm) updated to work with mc 1.8*
 
 ```js
-var mc = require('minecraft-protocol'); 
+
+//this gets the client connected. 
+
+var mc = require('minecraft-protocol'); //require('./minecraft-protocol/index.js')
 var client=mc.createClient({
 		port: 8080,  //this also needs to match server.properties setting: server-port   
-		username: 'neo',
+		username: 'morpheus',
 	});
 	
 ```
