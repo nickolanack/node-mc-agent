@@ -7,15 +7,17 @@
 ###Description###
 
 This project contains a set of javascript (node) libraries for interacting with a minecraft server through a
-player/agent. There are 7 libraries, each of which can be used to retreive information or manipulate the enviroment 
+player/agent. There are 7 libraries, each of which can be used to retreive information or manipulate the environment 
 through the agent. 
 
-- mc-entities keeps track of items players (mobs etc) around the agent
-- mc-inventory keeps track of the items held by the agent and provides the agent with the ability to use them
-- mc-movement keeps track of the agents current location and provides simple movement abilites
-- mc-pathfinder provides advanced routing algorithms used with mc-movement 
-- mc-senses tracks environment and player states, such as: health, hunger, time, weather ...
-- mc-spatial used by movement, and pathfinder, provides information about blocks and functions for measuring things ...
+- mc-entities.js  keeps track of items players (mobs etc) around the agent
+- mc-inventory.js  keeps track of the items held by the agent and provides the agent with the ability to use them
+- mc-movement.js  keeps track of the agents current location and provides simple movement abilites
+- mc-pathfinder.js  provides advanced routing algorithms can be used with mc-movement 
+- mc-senses.js  tracks environment and player states, such as: health, hunger, time, weather ...
+- mc-spatial.js used by movement, and pathfinder, provides information about blocks and functions for measuring things ...
+
+- agent.js is basically my working minecraft player 
 
 ###My Agent###
 
