@@ -23,7 +23,7 @@ through the agent.
 
 //this gets the client connected. 
 
-var mc = require('minecraft-protocol'); //require('./minecraft-protocol/index.js')
+var mc = require('./node-minecraft-protocol'); //require('./node-minecraft-protocol/sub/folders/to/index.js')
 var client=mc.createClient({
 		port: 8080,  //this also needs to match server.properties setting: server-port   
 		username: 'morpheus',
