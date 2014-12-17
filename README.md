@@ -16,6 +16,11 @@ through the agent.
 - mc-pathfinder provides advanced routing algorithms used with mc-movement 
 - mc-senses tracks environment and player states, such as: health, hunger, time, weather ...
 - mc-spatial used by movement, and pathfinder, provides information about blocks and functions for measuring things ...
+###My Agent###
+
+```terminal
+node agent.js
+```
 
 ###Code###
 
