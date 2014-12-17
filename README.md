@@ -1,6 +1,6 @@
 ##Node Minecraft Agent##
 
-*node-minecraft-agent is an artificial-intellegent player for minecraft named morpheus*
+*node-minecraft-agent is an artificial-intellegent player for minecraft named 'morpheus'*
 *node-minecraft-agent requires the updated minecraft-protocol (npm) updated to work with mc 1.8*
 
 ```js
