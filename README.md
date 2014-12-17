@@ -3,6 +3,22 @@
 *node-minecraft-agent is an artificial-intellegent player for minecraft named 'morpheus'*
 *node-minecraft-agent requires the updated minecraft-protocol (npm) updated to work with mc 1.8*
 
+
+###Description###
+
+This project contains a set of javascript (node) libraries for interacting with a minecraft server through a
+player/agent. There are 7 libraries, each of which can be used to retreive information or manipulate the enviroment 
+through the agent. 
+
+- mc-entities keeps track of items players (mobs etc) around the agent
+- mc-inventory keeps track of the items held by the agent and provides the agent with the ability to use them
+- mc-movement keeps track of the agents current location and provides simple movement abilites
+- mc-pathfinder provides advanced routing algorithms used with mc-movement 
+- mc-senses tracks environment and player states, such as: health, hunger, time, weather ...
+- mc-spatial used by movement, and pathfinder, provides information about blocks and functions for measuring things ...
+
+###Code###
+
 ```js
 
 //this gets the client connected. 
