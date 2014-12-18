@@ -12,10 +12,10 @@ through the agent.
 
 - mc-entities.js  keeps track of items players (mobs etc) around the agent
 - mc-inventory.js  keeps track of the items held by the agent and provides the agent with the ability to use them
-- mc-movement.js  keeps track of the agents current location and provides simple movement abilites
-- mc-pathfinder.js  provides advanced routing algorithms can be used with mc-movement 
-- mc-senses.js  tracks environment and player states, such as: health, hunger, time, weather ...
-- mc-spatial.js used by movement, and pathfinder, provides information about blocks and functions for measuring things ...
+- mc-movement.js  keeps track of the agents current location and provides simple movement abilites but fails, when obstructed and is too lazy to go around the obstruction
+- mc-pathfinder.js provides advanced routing algorithms can be used with mc-movement to solve path finding problems
+- mc-senses.js tracks environment and player states, such as: health, hunger, time, weather ...
+- mc-spatial.js used by movement, and pathfinder, and entities provides information about blocks distances and functions for measuring things ...
 
 - agent.js is basically my working minecraft player 
 
