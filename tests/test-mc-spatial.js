@@ -2,7 +2,7 @@ var assert=require('assert');
 
 var spatial=require('../math.js');
 
-console.log('Tests path2DExitsBlockAt path2DEntersBlockAt');
+
 
 //this should tests points that make strait lines ie: x or z is constant while the other changes
 //should text both x, and z straight lines
@@ -37,7 +37,7 @@ assert.deepEqual(
 
 assert.deepEqual(
 		{x:0.5,y:0,z:0},
-		spatial.path2D.EntersBlockAt({x:0,y:0,z:0},{x:0.5,y:0,z:0},{x:0.5,y:0,z:1})
+		spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0.5,y:0,z:0},{x:0.5,y:0,z:1})
 		);
 
 assert.deepEqual(
@@ -152,4 +152,4 @@ assert(spatial.path2D.pathsAreParallel(tangents[1],[{x:0,y:0,z:0},{x:5,y:0,z:5}]
 
 
 
-console.log('Complete');
+console.log('Testing Spatial Functions: Complete');
