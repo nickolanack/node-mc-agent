@@ -1,14 +1,18 @@
 
+
+var items=require('./mc-item-list.js');
+
+
 module.exports = {
 		createInventory: createInventory
 }
 
 
-function createInventory(client, itemMap){
+function createInventory(client){
 	
 
 	var inventory=new Inventory(client);	
-	inventory.setInventoryMap(itemMap);
+
 	
 	
 	client.on('entity_equipment',function(data){
@@ -184,8 +188,7 @@ Inventory.prototype.heldSlot=function(itemid){
 Inventory.prototype.listActions=function(itemid){
 
 	var me=this;
-	me.idToString(itemid);
-	
+	//TODO: 	
 };
 
 
@@ -369,7 +372,7 @@ Inventory.prototype.autoequip=function(callback){
 			
 			me.listItems(function(v, k){
 				if(k==slot)return;
-				if(me.idToString(v.id).indexOf(name)==-1)return;
+				if(items.idToString(v.id).indexOf(name)==-1)return;
 				if(best!==null){
 					//compare
 				}else{
@@ -488,51 +491,6 @@ Inventory.prototype.dropStack=function(){
 	});
 };
 
-
-
-
-
-
-
-Inventory.prototype.idToString=function(itemid, data){
-	var me=this;
-	
-	if(data>0){
-		var i=me._itemMap[0].indexOf(itemid+":"+data);
-
-		if(i>=0){
-			return me._itemMap[1][i];
-		}
-	}
-	
-	var i=me._itemMap[0].indexOf(itemid+":0");
-
-	if(i>=0){
-		return me._itemMap[1][i];
-	}
-	return 'unknown';
-};
-
-
-Inventory.prototype.stringToId=function(name){
-	var me=this;
-	var i=me._itemMap[1].indexOf(name);
-	if(i>=0){
-		var id=me._itemMap[0][i];
-		parseInt(id.split(':')[0]);
-	}
-	
-	return -1;
-};
-
-/*
- * data should be and array with 3 arrays. each of three arrays contains
- * a long array with ids, names, and 'minecraft:name' respectively
- */
-Inventory.prototype.setInventoryMap=function(data){
-	var me=this;
-	me._itemMap=data;
-};
 
 
 

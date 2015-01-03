@@ -656,7 +656,7 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 	var vi=velocity;
 	var di=td*vi; //distance unit.
 	
-	//console.log('moveToward '+JSON.stringify({x:point.x, z:point.z, d:spatial.path2D.distance(start, point)}));
+	//console.log('moveToward '+JSON.stringify({x:point.x, z:point.z, d:spatial.path2D.measure(start, point)}));
 	
 	//var maxdist=vi*(time/1000.0); //max distance that could be walked within time
 	

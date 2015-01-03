@@ -1,7 +1,8 @@
 
 var spatial=require('./math.js');
+var items=require('./mc-item-list.js');
 
-function createSpatialCognizance(client, itemMap){
+function createSpatialCognizance(client){
 	
 	var scog=new SpatialCognizance();	
 	
@@ -10,9 +11,7 @@ function createSpatialCognizance(client, itemMap){
 //		scog.list();
 //		
 //	},10000);
-	
-	scog.setItemMap(itemMap);
-	
+
 	client.on('map_chunk',function(data){
 		//console.log('map_chunk: '+JSON.stringify(data));
 	});
@@ -184,85 +183,6 @@ function SpatialCognizance(){
 }
 
 SpatialCognizance.prototype.__proto__ = events.EventEmitter.prototype;
-
-
-
-
-
-SpatialCognizance.prototype.idToString=function(itemid, data){
-	
-	var me=this;
-	if((typeof itemid)=='object'){
-		return me.idToString(itemid.id, itemid.data);
-	}
-	
-	if(data>0){
-		var i=me._itemMap[0].indexOf(itemid+":"+data);
-
-		if(i>=0){
-			return me._itemMap[1][i];
-		}
-	}
-	
-	var i=me._itemMap[0].indexOf(itemid+":0");
-
-	if(i>=0){
-		return me._itemMap[1][i];
-	}
-	return 'unknown ('+itemid+':'+(data||0)+')';
-	
-};
-
-
-var itc=0;
-SpatialCognizance.prototype.idToCode=function(itemid, data){
-	
-	var me=this;
-	if((typeof itemid)=='object'){
-		return me.idToCode(itemid.id, itemid.data);
-	}
-	
-	if(data>0){
-		var i=me._itemMap[0].indexOf(itemid+":"+data);
-
-		if(i>=0){
-			return me._itemMap[2][i];
-		}
-	}
-//	console.log(itemid);
-//	itc++;
-//	if(itc>100){
-//		console.log((new Error('')).stack);
-//	}
-	var i=me._itemMap[0].indexOf(itemid+":0");
-
-	if(i>=0){
-		return me._itemMap[2][i];
-	}
-	return 'unknown code('+itemid+':'+(data||0)+')';
-	
-};
-
-
-SpatialCognizance.prototype.stringToId=function(name){
-	var me=this;
-	var i=me._itemMap[1].indexOf(name);
-	if(i>=0){
-		var id=me._itemMap[0][i];
-		parseInt(id.split(':')[0]);
-	}
-	
-	return -1;
-};
-
-/*
- * data should be and array with 3 arrays. each of three arrays contains
- * a long array with ids, names, and 'minecraft:name' respectively
- */
-SpatialCognizance.prototype.setItemMap=function(data){
-	var me=this;
-	me._itemMap=data;
-};
 
 
 SpatialCognizance.prototype.calcChunk=function(p){
@@ -699,7 +619,7 @@ SpatialCognizance.prototype.findFloor=function(pos, opts){
 	var py=p.y; //remember start
 	p.y--; //
 	
-	//console.log(JSON.stringify(p)+' '+me.idToString(me.blockAt(p)));
+	//console.log(JSON.stringify(p)+' '+items.idToString(me.blockAt(p)));
 	
 	
 	var c=0;
@@ -720,7 +640,7 @@ SpatialCognizance.prototype.findFloor=function(pos, opts){
 		if(!me.hasBlock(p)){
 			throw new Error('findFloor() data does not exist (chunk not loaded?) at {x:'+p.x+', y:'+p.y+', x:'+p.z+'}');
 		}
-		//console.log(JSON.stringify(p)+' '+me.idToString(me.blockAt(p)));
+		//console.log(JSON.stringify(p)+' '+items.idToString(me.blockAt(p)));
 		
 		blocks[cursor(c)]=block(c)===null?me.blockAt(p):block(c);
 		blocks[cursor(c+1)]=block(c+1)===null?me.blockAt({x:p.x, y:p.y+1, z:p.z}):block(c+1);
@@ -736,7 +656,7 @@ SpatialCognizance.prototype.findFloor=function(pos, opts){
 		var isAir0=!me.blockIsSolid(block(c));
 		var isAir1=!me.blockIsSolid(block(c+1));
 		var isAir2=!me.blockIsSolid(block(c+2));
-		//console.log(JSON.stringify([me.idToString(block(c)), me.idToString(block(c+1)), me.idToString(block(c+2))]));
+		//console.log(JSON.stringify([items.idToString(block(c)), items.idToString(block(c+1)), items.idToString(block(c+2))]));
 		
 		if(((!isAir0) && isAir1 && isAir2)){
 			// bottom block is not air, but the rest are. a normal use-able floor block at (x,y,z)
@@ -768,7 +688,7 @@ SpatialCognizance.prototype.findFloor=function(pos, opts){
 SpatialCognizance.prototype.blockIsSolid=function(block){
 	
 	var me=this;
-	var code=me.idToCode(block);
+	var code=items.idToCode(block);
 	
 	//console.log(code);
 	
@@ -844,7 +764,7 @@ SpatialCognizance.prototype.blockIsSolid=function(block){
 SpatialCognizance.prototype.doorIsOpen=function(block){
 	var me=this;
 	
-	var code=me.idToCode(block);
+	var code=items.idToCode(block);
 	
 	switch(code){
 	
@@ -865,7 +785,7 @@ SpatialCognizance.prototype.doorIsOpen=function(block){
 	var bottom;
 	
 	var above=me.blockAt({x:block.p.x, y:block.p.y+1, z:block.p.z});
-	if(me.idToCode(above)==code){
+	if(items.idToCode(above)==code){
 		
 		top=above
 		bottom=block
@@ -873,7 +793,7 @@ SpatialCognizance.prototype.doorIsOpen=function(block){
 	}else{
 		
 		var below=me.blockAt({x:block.p.x, y:block.p.y-1, z:block.p.z})
-		if(me.idToCode(below)==code){
+		if(items.idToCode(below)==code){
 			
 			top=block;
 			bottom=below;
@@ -1034,7 +954,7 @@ SpatialCognizance.prototype.printFloorplan=function(f, fmt, prnt){
 	var log=prnt===undefined?console.log:prnt;
 	var format=fmt===undefined?function(b, x, z){
 		if(b==null)return '[ ]';
-		return '['+(me.idToString(me.blockAt(b))).substring(0,1)+']';
+		return '['+(items.idToString(me.blockAt(b))).substring(0,1)+']';
 	
 	}:fmt;
 	

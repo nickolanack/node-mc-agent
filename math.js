@@ -80,7 +80,7 @@ function path2DEntersBlockAt(b0, p0, p1){
 	
 };
 
-//returns the Point x,z (y is ingored, set to b0.y) which is the center point of the path entering and exiting
+//returns the Point x,z (y is ignored, set to b0.y) which is the center point of the path entering and exiting
 function path2DIntersectsBlockAt(b0, p0, p1){
 	
 	var i0=path2DEntersBlockAt(b0, p0, p1);
@@ -336,7 +336,7 @@ function path2DPathsIntersectAt(pth0, pth1){
 	return {x:x, z:z};
 }
 
-function point3DMeasure(p0, p1){
+function path3DDistance(p0, p1){
 	
 	return Math.sqrt(Math.pow(p1.x-p0.x,2) + Math.pow(p1.y-p0.y,2) + Math.pow(p1.z-p0.z,2));
 	
@@ -346,7 +346,7 @@ module.exports = {
 		
 		path3D:{
 			
-			measure:point3DMeasure,
+			measure:path3DDistance,
 			
 		},
 		path2D:{
@@ -359,7 +359,7 @@ module.exports = {
 			fractionAtDistance:path2DFractionAtDistance,
 			pointAtFraction:path2DPointAtFraction,
 			pointAtDistance:path2DPointAtDistance,
-			distance:path2DDistance,
+			measure:path2DDistance,
 			contraintPaths:path2DContraintPaths,
 			functions:path2DFunctions,
 			pathsAreParallel:path2DPathsAreParallel

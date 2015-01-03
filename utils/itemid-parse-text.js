@@ -1,5 +1,5 @@
 /*
- * items.txt looks like
+ * items.txt looks like 
  * 
 		0	
     	Air
@@ -43,5 +43,7 @@ require('fs').readFile('./items.txt', function (err, data) {
 
 		cur_a=(cur_a+1)%3;
 	});
-	require('fs').writeFile('./mc-items.json',JSON.stringify(map));
+	require('fs').writeFile('./itemids.json',JSON.stringify(map));
 });
+
+

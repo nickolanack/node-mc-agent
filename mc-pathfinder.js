@@ -18,11 +18,11 @@ function createPathfinder(scog){
 	});
 	
 	pathfinder.setGFunction(function(n, c, to){
-		return c.g+spatial.path2D.distance(c, n);
+		return c.g+spatial.path2D.measure(c, n);
 	});
 	
 	pathfinder.setHFunction(function(n, c, to){
-		return spatial.path2D.distance({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
+		return spatial.path2D.measure({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
 	});
 
 	pathfinder.setFFunction(function(n, c, to){
@@ -104,7 +104,7 @@ Pathfinder.prototype.astar=function(from, to){
 	//assign g, and h values directly to the start object. 
 	//hmm, is .h necessary?
 	from.g=0;
-	from.h=spatial.path2D.distance(from, to); 
+	from.h=spatial.path2D.measure(from, to); 
 	
 	open.push(from); //will be processed right away and moved into closed
 	var max=500; //this can be removed once I'm sure that i don't accidentally program an infinite loop
@@ -159,8 +159,8 @@ Pathfinder.prototype.astar=function(from, to){
 			}
 			
 			n.parent=c;
-			n.g=c.g+spatial.path2D.distance(c, n);
-			n.h=spatial.path2D.distance({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
+			n.g=c.g+spatial.path2D.measure(c, n);
+			n.h=spatial.path2D.measure({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
 			n.f=n.g+n.h;
 			
 			if(!me.scog.positionListContains(open, n)){

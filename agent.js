@@ -7,8 +7,8 @@
 
 
 
-// this works without js, since it has project.json, otherwise './node-minecraft-protocol/protocol/index.js'
-// You probably do not need the trailing '/protocol', (I have put the code at https://github.com/nickolanack/node-minecraft-protocol 
+// this works without .js, since it has project.json, otherwise './node-minecraft-protocol/protocol/index.js'
+// You probably do not need the trailing '/protocol', (I have put the code from https://github.com/nickolanack/node-minecraft-protocol 
 // in the sub-folder named 'protocol')
 var mc = require('./node-minecraft-protocol/protocol');
 
@@ -37,7 +37,7 @@ var mc = require('./node-minecraft-protocol/protocol');
 		
 		// collection of state detection elements internal external
 		var senses=require('./mc-senses.js').createSenses(client, mc);
-		var inventory=require('./mc-inventory.js').createInventory(client, itemMap);
+		var inventory=require('./mc-inventory.js').createInventory(client);
 		
 		var ecog=require('./mc-entities.js').createEntityCognizance(client);
 	
@@ -71,7 +71,7 @@ var mc = require('./node-minecraft-protocol/protocol');
 		
 		// movement controller. contains moveTo, moveToRelative, look, lookAtPoint, jump, etc
 		
-		var scog=require('./mc-spatial.js').createSpatialCognizance(client, itemMap);
+		var scog=require('./mc-spatial.js').createSpatialCognizance(client);
 		var movement=require('./mc-movement.js').createMovement(client, scog);
 		
 		
