@@ -150,6 +150,20 @@ assert(spatial.path2D.pathsAreParallel(tangents[0],[{x:0,y:0,z:0},{x:5,y:0,z:5}]
 assert(spatial.path2D.pathsAreParallel(tangents[1],[{x:0,y:0,z:0},{x:5,y:0,z:5}]));
 
 
+assert.deepEqual(spatial.point3D.floor({x:0.5, y:0.5, z:0.5}),{x:0, y:0, z:0});
+assert.deepEqual(spatial.point3D.ceil({x:0.5, y:-0.5, z:0.5}),{x:1, y:0, z:1});
+assert.deepEqual(spatial.point3D.center({x:10.3, y:-5.9, z:0.7}),{x:10.5, y:-5.5, z:0.5});
+
+
+//ensure that sliceAt contains correct number of cells
+assert.equal(spatial.grid2D.sliceAt({x:0,y:0,z:0}, 1).length, 9); 
+assert.equal(spatial.grid2D.sliceAt({x:0,y:0,z:0}, 2).length, 25);
+assert.equal(spatial.grid2D.sliceAt({x:0,y:0,z:0}, 0.5).length,4);
+
+//returns the points around p, with p removed set diff
+var diff=spatial.points2D.setDifference(spatial.grid2D.sliceAt({x:0,y:0,z:0}, 0.5),[{x:0,y:0,z:0}])
+assert.equal(diff.length,3);
+
 
 
 console.log('Testing Spatial Functions: Complete');

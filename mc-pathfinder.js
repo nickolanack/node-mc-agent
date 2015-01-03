@@ -6,7 +6,7 @@ var spatial=require('./math.js');
 
 function createPathfinder(scog){
 	
-	var pathfinder new Pathfinder(scog);
+	var pathfinder = new Pathfinder(scog);
 	
 	
 	pathfinder.setNeighbourFunction(function(point){
@@ -29,7 +29,7 @@ function createPathfinder(scog){
 		return n.g+n.h;
 	});
 	
-	
+	return pathfinder;
 }
 
 var events=require('events');
@@ -43,27 +43,28 @@ function Pathfinder(scog){
 }
 
 Pathfinder.prototype.__proto__ = events.EventEmitter.prototype;
-Pathfinder.prototype.setGFunction(f){
+
+Pathfinder.prototype.setGFunction=function(f){
 	var me=this;
 	me._g=f;
 };
 
-Pathfinder.prototype.setHFunction(f){
+Pathfinder.prototype.setHFunction=function(f){
 	var me=this;
 	me._h=f;
 };
 
-Pathfinder.prototype.setFFunction(f){
+Pathfinder.prototype.setFFunction=function(f){
 	var me=this;
 	me._f=f;
 };
 
-Pathfinder.prototype.setEqualityFunction(f){
+Pathfinder.prototype.setEqualityFunction=function(f){
 	var me=this;
 	me._equals=f;
 };
 
-Pathfinder.prototype.setNeighbourFunction(f){
+Pathfinder.prototype.setNeighbourFunction=function(f){
 	var me=this;
 	me._next=f;
 };
@@ -77,7 +78,17 @@ Pathfinder.prototype.route=function(from, to, time, callback){
 	console.log('Path Finder: '+JSON.stringify({from:from, to:to}));
 	
 	var path=me.astar(start, goal);
-	me.scog.printFloorplan(me.scog.coordsToFloorplan(path));
+	if(path===false){
+		
+	}else{
+		me.scog.printFloorplan(me.scog.coordsToFloorplan(path));
+		path.forEach(function(p){
+			console.log(JSON.stringify({x:p.x, z:p.z}));
+		});
+		if(callback){
+			setTimeout(callback, 15000)
+		}
+	}
 	
 	//TODO: start following this path
 	
@@ -114,11 +125,11 @@ Pathfinder.prototype.astar=function(from, to){
 			console.log('took too long');
 			return false;
 		}
-		console.log(i);
+		
 		
 		//c is the position to check during this round.
 		var c=open.shift();
-		
+		//console.log((i++)+': '+JSON.stringify({x:c.x, y:c.y, z:c.z}));
 		
 		if(me.scog.isEqualTo(c, to)){
 			//c is the goal, so we are finished. just reconstruct the path from c to start. 
@@ -143,7 +154,13 @@ Pathfinder.prototype.astar=function(from, to){
 		
 		
 		//floorNeighbours returns array of block positions that are floor blocks.
-		me.scog.floorNeighbours(c).forEach(function(n){
+		try{
+			var neighbors=me.scog.floorNeighbours(c);
+		}catch(e){
+			console.log(e);
+		}
+		console.log(JSON.stringify(neighbors));
+		neighbors.forEach(function(n){
 			if(me.scog.positionListContains(closed, n)||(c.y-n.y)!=0){
 				//console.log('skip '+JSON.stringify(n));
 				
@@ -154,13 +171,12 @@ Pathfinder.prototype.astar=function(from, to){
 			var dz=c.z-n.z;
 			
 			if(dx!=0&&dz!=0){
-				//no angles...
 				return;
 			}
 			
 			n.parent=c;
 			n.g=c.g+spatial.path2D.measure(c, n);
-			n.h=spatial.path2D.measure({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
+			n.h=spatial.path2D.measure({x:n.x+0.5, y:n.y, z:n.z+0.5}, {x:to.x+0.5, y:to.y, z:to.z+0.5});
 			n.f=n.g+n.h;
 			
 			if(!me.scog.positionListContains(open, n)){
@@ -186,5 +202,6 @@ Pathfinder.prototype.astar=function(from, to){
 		
 	}
 	console.log('no path');
+	return false;
 	
 };

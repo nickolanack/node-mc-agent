@@ -30,7 +30,7 @@ var mc = require('./node-minecraft-protocol/protocol');
 		client.entityId=data.entityId;
 		
 		
-		var itemMap=require('./mc-items.json');
+		
 		
 		
 		

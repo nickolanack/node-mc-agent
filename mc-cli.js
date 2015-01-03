@@ -7,10 +7,10 @@ module.exports = {
 };
 
 
-var items=require('./mc-args.js');
+var items=require('./mc-item-list.js');
 
 
-function listen(client, args){
+function listen(client, interfaces){
 	
 	var readline = require('readline');
 	var name=client.username;
@@ -24,7 +24,7 @@ function listen(client, args){
 		
 		var processed=false;
 	
-		if(args.movement){
+		if(interfaces.movement){
 			if(input.indexOf('move ')===0){
 				
 			
@@ -46,7 +46,7 @@ function listen(client, args){
 				}
 				
 				if(Object.keys(arg).length){
-					args.movement.moveToRelative(arg);
+					interfaces.movement.moveToRelative(arg);
 				}
 				
 				processed=true;
@@ -71,13 +71,13 @@ function listen(client, args){
 				}
 				
 				if(Object.keys(arg).length){
-					args.movement.moveTo(arg);
+					interfaces.movement.moveTo(arg);
 				}
 				processed=true;
 				
 			}else if(input.indexOf('walk ')===0){
 				
-				var pos=args.movement.position;
+				var pos=interfaces.movement.position;
 				var arg={x:pos.x, y:pos.y, z:pos.z};
 				var tokens=input.substring(5).split(' ');
 				for(var i=0;i<tokens.length;i++){
@@ -97,8 +97,8 @@ function listen(client, args){
 				
 				if(Object.keys(arg).length){
 					console.log('walk to '+JSON.stringify(arg));
-					args.movement.walkToward(arg, null, 1000, function(err){
-						console.log(JSON.stringify(args.movement.position));
+					interfaces.movement.walkToward(arg, null, 1000, function(err){
+						console.log(JSON.stringify(interfaces.movement.position));
 					});
 				}
 				processed=true;
@@ -121,49 +121,49 @@ function listen(client, args){
 				}
 				
 				if(Object.keys(arg).length){
-					args.movement.look(arg);
+					interfaces.movement.look(arg);
 				}
 				processed=true;
 				
 			}else if(input.indexOf('crouch')===0){
 				
-				args.movement.crouch();
+				interfaces.movement.crouch();
 				processed=true;
 				
 			}else if(input.indexOf('stand')===0){
 				
-				args.movement.stand();
+				interfaces.movement.stand();
 				processed=true;
 				
 			}else if(input.indexOf('jump')===0){
 				
-				args.movement.jump();
+				interfaces.movement.jump();
 				processed=true;
 				
 			}else if(input.indexOf('position')===0){
 				
-				console.log(JSON.stringify(args.movement.position));	
+				console.log(JSON.stringify(interfaces.movement.position));	
 				processed=true;
 				
 			}
 			
 		}
 		
-		if(args.inventory){
+		if(interfaces.inventory){
 			if(input.indexOf('inventory count ')===0){
 				
 				var item=parseInt(input.substring(16));
-				console.log(args.inventory.count(item));
+				console.log(interfaces.inventory.count(item));
 				processed=true;
 			}else if(input.indexOf('inventory discard ')===0){
 				
 				var item=parseInt(input.substring(18));
-				args.inventory.discard(item);
+				interfaces.inventory.discard(item);
 				processed=true;
 				
 			}else if(input==='inventory list'){
 
-				args.inventory.listItems(function(v,k){
+				interfaces.inventory.listItems(function(v,k){
 					
 					return items.idToString(v.id, v.itemDamage)+" "+v.itemCount;
 					//return v.id+" "+items.idToString(v.id);
@@ -174,7 +174,7 @@ function listen(client, args){
 				processed=true;
 			}else if(input==='inventory slots'){
 
-				args.inventory.listItems(function(v,k){
+				interfaces.inventory.listItems(function(v,k){
 					
 					return JSON.stringify(v);
 					//return v.id+" "+items.idToString(v.id);
@@ -185,7 +185,7 @@ function listen(client, args){
 				processed=true;
 			}else if(input==='inventory armor'){
 				
-				args.inventory.listItems(function(v,k){
+				interfaces.inventory.listItems(function(v,k){
 					if(([5,6,7,8]).indexOf(k)>=0){
 						return items.idToString(v.id, v.itemDamage)+" "+v.itemCount;
 					}
@@ -196,7 +196,7 @@ function listen(client, args){
 				processed=true;
 			}else if(input==='inventory armor'||input==='inventory all armor'){
 				
-				args.inventory.listItems(function(v,k){
+				interfaces.inventory.listItems(function(v,k){
 					if(input==='inventory all armor'||([5,6,7,8]).indexOf(k)>=0){
 						var string=items.idToString(v.id, v.itemDamage);
 						if(string.indexOf('Chestplate')>=0||string.indexOf('Boots')>=0||string.indexOf('Leggings')>=0||string.indexOf('Helmet')>=0){
@@ -210,14 +210,14 @@ function listen(client, args){
 				processed=true;
 			}else if(input==='inventory weapons'||input==='inventory all weapons'){
 				
-				args.inventory.listItems(function(v,k){
+				interfaces.inventory.listItems(function(v,k){
 					if(input==='inventory all weapons'||([36, 37, 38, 39, 40, 41, 42, 43, 44]).indexOf(k)>=0){
 						var string=items.idToString(v.id, v.itemDamage);
 						if(string.indexOf('Sword')>=0){
 							return string;
 						}
 						if(string.indexOf('Bow')>=0){
-							var a=args.inventory.count(262);
+							var a=interfaces.inventory.count(262);
 							string+=' ('+a+' Arrow'+(a==1?'':'s')+')';
 							return string;
 						}
@@ -231,13 +231,13 @@ function listen(client, args){
 				
 				processed=true;
 			}else if(input==='inventory slot'){
-				var slot=args.inventory.heldSlot();
+				var slot=interfaces.inventory.heldSlot();
 				console.log('held slot: '+slot+' ('+(slot-36)+')');
 				processed=true;
 				
 			}else if(input==='inventory item'){
 				//display currently active item
-				var item=args.inventory.itemAt(args.inventory.heldSlot());
+				var item=interfaces.inventory.itemAt(interfaces.inventory.heldSlot());
 				if(item!==null){
 					console.log(items.idToString(item.id, item.itemDamage)+" "+item.itemCount);
 					
@@ -247,51 +247,51 @@ function listen(client, args){
 				processed=true;
 			}else if(input==='inventory drop'){
 				//drop one of what is currenlty held
-				args.inventory.drop();
+				interfaces.inventory.drop();
 				processed=true;
 				
 			}else if(input==='inventory dropstack'){
 				//drop all of what is currenlty held
-				args.inventory.dropStack();
+				interfaces.inventory.dropStack();
 				processed=true;
 				
 			}else if(input.indexOf('inventory use ')===0){
 				
 				var slot=parseInt(input.substring(14));
-				args.inventory.useSlot(slot);
+				interfaces.inventory.useSlot(slot);
 				commandLine('inventory item');
 				processed=true;
 				
 			}else if(input.indexOf('inventory swap ')===0){
-				var args=input.substring(14).split(' ');
+				var interfaces=input.substring(14).split(' ');
 					
-				var slota=parseInt(args[0]);
-				var slotb=parseInt(args[1]);
+				var slota=parseInt(interfaces[0]);
+				var slotb=parseInt(interfaces[1]);
 	
-				args.inventory.swap(slota, slotb, function(){
+				interfaces.inventory.swap(slota, slotb, function(){
 					
 				});
 				processed=true;
 				
 			}else if(input.indexOf('inventory autoequip')===0){
-				args.inventory.autoequip();
+				interfaces.inventory.autoequip();
 				processed=true;
 			}
 			
 		}
 		
-		if(args.spatial){
+		if(interfaces.spatial){
 			if(input==='spatial count chunks'){
-				var c=args.spatial.chunkCount();
+				var c=interfaces.spatial.chunkCount();
 				console.log(c+' chunk'+(c==1?'':'s'));
 				processed=true;
-			}else if(args.movement&&(input==='spatial floorplan'||input==='spatial floorplan -y')){
+			}else if(interfaces.movement&&(input==='spatial floorplan'||input==='spatial floorplan -y')){
 				
 				require('colors');
 				
-				var p=args.movement.position;
+				var p=interfaces.movement.position;
 				
-				var rows=args.spatial.floorplan({x:p.x, y:p.y, z:p.z});
+				var rows=interfaces.spatial.floorplan({x:p.x, y:p.y, z:p.z});
 					
 				var names=[];			
 				var center=Math.floor(rows.length/2);
@@ -300,7 +300,7 @@ function listen(client, args){
 					for(var x=0;x<rows.length;x++){
 						(function(block, x){
 							
-							var name=args.spatial.idToString(block);
+							var name=interfaces.spatial.idToString(block);
 							
 							
 							if(block===undefined){
@@ -341,15 +341,15 @@ function listen(client, args){
 				console.log(JSON.stringify(rows[center][center]));
 				
 				processed=true;
-			}else if(args.movement&&input==='spatial floor'){
+			}else if(interfaces.movement&&input==='spatial floor'){
 				
-				var p=args.movement.position;
+				var p=interfaces.movement.position;
 				console.log('find floor at: '+JSON.stringify(p));
 				
-				args.movement.currentFloorPositions().forEach(function(floor){
+				interfaces.movement.currentFloorPositions().forEach(function(floor){
 					
-					//var floor=args.spatial.findFloor(p);
-					var block=args.spatial.blockAt(floor);
+					//var floor=interfaces.spatial.findFloor(p);
+					var block=interfaces.spatial.blockAt(floor);
 					console.log(JSON.stringify(block)+' '+items.idToString(block));
 					
 					
@@ -357,11 +357,11 @@ function listen(client, args){
 				
 				processed=true;
 				
-			}else if(args.movement&&input==='spatial chunk'){
+			}else if(interfaces.movement&&input==='spatial chunk'){
 				
-				var p=args.movement.position;
+				var p=interfaces.movement.position;
 				
-				console.log("chunk: "+JSON.stringify(args.spatial.calcChunk(p))+' offset: '+JSON.stringify(args.spatial.calcOffset(p)));
+				console.log("chunk: "+JSON.stringify(interfaces.spatial.calcChunk(p))+' offset: '+JSON.stringify(interfaces.spatial.calcOffset(p)));
 				
 				processed=true;
 				
@@ -386,7 +386,7 @@ function listen(client, args){
 				}
 				
 				if(Object.keys(arg).length==3){
-					var b=args.spatial.blockAt(arg);
+					var b=interfaces.spatial.blockAt(arg);
 					console.log(JSON.stringify(b)+' '+items.idToString(b));
 				}
 				processed=true;
@@ -394,7 +394,7 @@ function listen(client, args){
 			}else if(input.indexOf('spatial block')===0){
 				
 
-				var p=args.movement.position;
+				var p=interfaces.movement.position;
 				
 				var arg={x:p.x, y:p.y, z:p.z};
 				var tokens=input.substring(13).split(' ');
@@ -414,7 +414,7 @@ function listen(client, args){
 				}
 				
 				if(Object.keys(arg).length==3){
-					var b=args.spatial.blockAt(arg);
+					var b=interfaces.spatial.blockAt(arg);
 					console.log(JSON.stringify(b)+' '+items.idToString(b));
 				}
 				processed=true;

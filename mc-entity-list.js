@@ -3,8 +3,6 @@ var objects=require('./objects.json');
 
 
 function mobIdToString(id){
-
-	
 	var i=mobs[0].indexOf(id);
 
 	if(i>=0){
@@ -12,14 +10,11 @@ function mobIdToString(id){
 	}
 	
 	return 'unknown mob('+id+')';
-	
 };
 
 
 
 function objectIdToString(id){
-
-	
 	var i=objects[0].indexOf(id);
 
 	if(i>=0){
@@ -27,7 +22,6 @@ function objectIdToString(id){
 	}
 	
 	return 'unknown object('+id+')';
-	
 };
 
 

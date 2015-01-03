@@ -3,6 +3,8 @@ module.exports = {
 		createEntityCognizance: createEntityCognizance
 };
 
+var entities=require('./mc-entity-list.js');
+
 
 function createEntityCognizance(client){
 	
@@ -16,7 +18,7 @@ function createEntityCognizance(client){
 	client.on('spawn_entity',function(data){
 			//ecog.addEntity(data.entityId);
 		
-		var type=objectTypeIdToString(data.type);
+		var type=entities.objectIdToString(data.type);
 		
 		//console.log('spawn_entity: '+type);
 		ecog.addEntity(data.entityId, {
@@ -26,7 +28,7 @@ function createEntityCognizance(client){
 	
 	client.on('spawn_entity_living',function(data){
 		
-		var type=mobTypeIdToString(data.type);
+		var type=entities.mobIdToString(data.type);
 		
 		//console.log('spawn_entity_living: '+type);
 		ecog.addEntity(data.entityId, {
@@ -260,91 +262,3 @@ EntityCognizance.prototype.setMortalEnemies=function(e){
 	me._m_enemies=e;
 };
 
-
-function mobTypeIdToString(id){
-	
-	
-//	48	Mob	N/A	N/A
-//	49	Monster	N/A	N/A
-	
-	switch(id){
-	
-
-	
-	case 50:	return 'Creeper'; //0.6	1.8
-	case 51:	return 'Skeleton'; //	0.6	1.8
-	case 52:	return 'Spider'; //	1.4	0.9
-	case 53:	return 'Giant Zombie'; //	3.6	10.8
-	case 54:	return 'Zombie'; //	0.6	1.8
-	case 55:	return 'Slime'; //	0.6 * size	0.6 * size
-	case 56:	return 'Ghast'; //	4	4
-	case 57:	return 'Zombie Pigman'; //	0.6	1.8
-	case 58:	return 'Enderman'; //	0.6	2.9
-	case 59:	return 'Cave Spider'; //	0.7	0.5
-	case 60:	return 'Silverfish'; //	0.3	0.7
-	case 61:	return 'Blaze'; //	0.6	1.8
-	case 62:	return 'Magma Cube'; //	0.6 * size	0.6 * size
-	case 63:	return 'Ender Dragon'; //	16.0	8.0
-	case 64:	return 'Wither'; //	0.9	4.0
-	case 65:	return 'Bat'; //	0.5	0.9
-	case 66:	return 'Witch'; //	0.6	1.8
-	case 67:	return 'Endermite'; //	0.4	0.3
-	case 68:	return 'Guardian'; //	0.85	0.85
-	case 90:	return 'Pig'; //	0.9	0.9
-	case 91:	return 'Sheep'; //	0.9	1.3
-	case 92:	return 'Cow'; //	0.9	1.3
-	case 93:	return 'Chicken'; //	0.3	0.7
-	case 94:	return 'Squid'; //	0.95	0.95
-	case 95:	return 'Wolf'; //	0.6	0.8
-	case 96:	return 'Mooshroom'; //	0.9	1.3
-	case 97:	return 'Snowman'; //	0.4	1.8
-	case 98:	return 'Ocelot'; //	0.6	0.8
-	case 99:	return 'Iron Golem'; //	1.4	2.9
-	case 100:	return 'Horse'; //	1.4	1.6
-	case 101:	return 'Rabbit'; //	0.6	0.7
-	case 120:	return 'Villager'; //	0.6	1.8
-
-	default:  return 'unknown:'+id;
-	}
-};
-
-function objectTypeIdToString(id){
-	
-	
-//	48	Mob	N/A	N/A
-//	49	Monster	N/A	N/A
-	
-	switch(id){
-
-	
-	case 1:	'Boat'; //	1.5	0.6
-	case 2:	'Item Stack'; // (Slot)	0.25	0.25
-	case 10: 'Minecart'; //	0.98	0.7
-	//case 11: (unused since 1.6.x)	Minecart (storage)	0.98	0.7
-	//case 12: (unused since 1.6.x)	Minecart (powered)	0.98	0.7
-	case 50:	return 'Activated TNT'; //	0.98	0.98
-	case 51:	return 'EnderCrystal'; //	2.0	2.0
-	case 60:	return 'Arrow'; // (projectile)	0.5	0.5
-	case 61:	return 'Snowball'; // (projectile)	0.25	0.25
-	case 62:	return 'Egg'; // (projectile)	0.25	0.25
-	case 63:	return 'FireBall'; // (ghast projectile)	1.0	1.0
-	case 64:	return 'FireCharge'; // (blaze projectile)	0.3125	0.3125
-	case 65:	return 'Thrown Enderpearl'; //	0.25	0.25
-	case 66:	return 'Wither Skull'; // (projectile)	0.3125	0.3125
-	case 70:	return 'Falling Objects'; //	0.98	0.98
-	case 71:	return 'Item frames'; //	varies	varies
-	case 72:	return 'Eye of Ender'; //	0.25	0.25
-	case 73:	return 'Thrown Potion'; //	0.25	0.25
-	case 74:	return 'Falling Dragon Egg'; //	0.98	0.98
-	case 75:	return 'Thrown Exp Bottle'; //	0.25	0.25
-	case 76:	return 'Firework Rocket'; //	0.25	0.25
-	case 77:	return 'Leash Knot'; //	0.5	0.5
-	case 78:	return 'ArmorStand'; //	0.5	2.0
-	case 90:	return 'Fishing Float'; //	0.25	0.25
-	
-	default: return 'unknown:'+id;
-
-}
-
-
-}

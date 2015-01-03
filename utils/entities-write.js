@@ -180,6 +180,7 @@ var objects=[[
 	'Falling Objects',
 	'Item frames',
 	'Eye of Ender',
+	'Thrown Potion',
 	'Falling Dragon Egg',
 	'Thrown Exp Bottle',
 	'Firework Rocket',

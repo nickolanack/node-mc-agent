@@ -443,20 +443,9 @@ SpatialCognizance.prototype.blockAt=function(p){
 SpatialCognizance.prototype.positionListColumnSliceAt=function(p, r){
 	var me=this;
 
-	var bounds=[{x:p.x-r, y:p.y, z:p.z-r}, {x:p.x+r, y:p.y, z:p.z-r}, {x:p.x+r, y:p.y, z:p.z+r}, {x:p.x,y:p.y, z:p.z+r}];
-	var coords=[];
+	var coords=spatial.grid2D.sliceAt(p,r);
+	return spatial.points2D.setDifference(coords,[p]);
 	
-	bounds.forEach(function(p){
-		b=positionToBlockCoord(p);
-		for(var i=0;i<coords.length;i++){
-			if(me.isEqualTo(coords[i], p, true)){
-				return;
-			}
-		}
-		coords.push(b);
-	});
-	
-	return coords;
 };
 SpatialCognizance.prototype.floorNeighbours=function(p){
 	var me=this;
@@ -981,4 +970,9 @@ function positionToBlockCoord(p){
 	return {x:Math.floor(p.x), y:Math.floor(p.y), z:Math.floor(p.z)};
 };
 
+
+module.exports = {
+		
+		createSpatialCognizance: createSpatialCognizance
+}
 
