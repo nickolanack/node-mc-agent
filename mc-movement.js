@@ -1,3 +1,4 @@
+var spatial=require('./math.js');
 
 module.exports = {
 		createMovement: createMovement
@@ -15,7 +16,7 @@ function createMovement(client, scog){
 
 var events=require('events');
 
-var spatial=require('./mc-spatial').math;
+
 
 function Movement(client, scog){
 	
@@ -579,13 +580,13 @@ Movement.prototype.calcJumpsTo=function(p, v){
 		var y1=bi.y;
 		if(y1-y0==maxJump){
 			
-			var p0=spatial.path2DEntersBlockAt(bi, s, p);
-			//var p1=me.scog.math.path2DEntersBlockAt(coords[i], me.position, p);
+			var p0=spatial.path2D.entersBlockAt(bi, s, p);
+			//var p1=me.scog.math.path2D.entersBlockAt(coords[i], me.position, p);
 			
-			var d0=spatial.path2DDistanceAtPoint(p0, me.position, p);
+			var d0=spatial.path2D.distanceAtPoint(p0, me.position, p);
 			var j=d0-Math.max(dist, me._span_r);
 			
-			//console.log('jump to '+JSON.stringify(p0)+' '+d0+' '+j+' from '+JSON.stringify(spatial.path2DPointAtDistance(j, s, p)));
+			//console.log('jump to '+JSON.stringify(p0)+' '+d0+' '+j+' from '+JSON.stringify(spatial.path2D.pointAtDistance(j, s, p)));
 			//console.log('jump: '+JSON.stringify(p0)+' - '+d);
 			
 			//{distance of jump start, position of jump at top}
@@ -655,7 +656,7 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 	var vi=velocity;
 	var di=td*vi; //distance unit.
 	
-	//console.log('moveToward '+JSON.stringify({x:point.x, z:point.z, d:spatial.path2DDistance(start, point)}));
+	//console.log('moveToward '+JSON.stringify({x:point.x, z:point.z, d:spatial.path2D.distance(start, point)}));
 	
 	//var maxdist=vi*(time/1000.0); //max distance that could be walked within time
 	
@@ -682,7 +683,7 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 	
 	//ignores y
 	var calcPosN=function(d){
-		return spatial.path2DPointAtDistance(d, start, point);
+		return spatial.path2D.pointAtDistance(d, start, point);
 	};
 
 
@@ -716,8 +717,8 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 		me.position.x=pos.x;
 		me.position.z=pos.z;
 		
-		d=spatial.path2DDistanceAtPoint(me.position, start, point);
-		var f=spatial.path2DFractionAtDistance(d, start, point);
+		d=spatial.path2D.distanceAtPoint(me.position, start, point);
+		var f=spatial.path2D.fractionAtDistance(d, start, point);
 		//console.log("#"+action+"  d:"+d+" f:"+f);
 		
 		pos=calcPosN(d+di); //for next loop;

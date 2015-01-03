@@ -98,11 +98,11 @@ var mc = require('./node-minecraft-protocol/protocol');
 		//when the player moves away at lease x blocks start following
 		//if the player manages to move y blocks then stop following...
 		
-		var spatial=require('./mc-spatial.js').math;
+		var spatial=require('./math.js');
 		
 		ecog.on('detect.enemy',function(id, type){
 			ecog.on('update.position.'+id, function(p){
-				var d=spatial.point3DMeasure(movement.position, p);
+				var d=spatial.path3D.measure(movement.position, p);
 				if(d<20){
 					
 				}
