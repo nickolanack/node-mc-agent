@@ -6,7 +6,29 @@ var spatial=require('./mc-spatial.js').math;
 
 function createPathfinder(scog){
 	
-	return new Pathfinder(scog);
+	var pathfinder new Pathfinder(scog);
+	
+	
+	pathfinder.setNeighbourFunction(function(point){
+		return scog.floorNeighbours(point);
+	});
+	
+	pathfinder.setEqualityFunction(function(a, b){
+		
+	});
+	
+	pathfinder.setGFunction(function(n, c, to){
+		return c.g+spatial.path2DDistance(c, n);
+	});
+	
+	pathfinder.setHFunction(function(n, c, to){
+		return spatial.path2DDistance({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
+	});
+
+	pathfinder.setFFunction(function(n, c, to){
+		return n.g+n.h;
+	});
+	
 	
 }
 
@@ -21,14 +43,54 @@ function Pathfinder(scog){
 }
 
 Pathfinder.prototype.__proto__ = events.EventEmitter.prototype;
+Pathfinder.prototype.setGFunction(f){
+	var me=this;
+	me._g=f;
+};
+
+Pathfinder.prototype.setHFunction(f){
+	var me=this;
+	me._h=f;
+};
+
+Pathfinder.prototype.setFFunction(f){
+	var me=this;
+	me._f=f;
+};
+
+Pathfinder.prototype.setEqualityFunction(f){
+	var me=this;
+	me._equals=f;
+};
+
+Pathfinder.prototype.setNeighbourFunction(f){
+	var me=this;
+	me._next=f;
+};
 
 
+Pathfinder.prototype.route=function(from, to, time, callback){
+	var me=this;
+	var goal=me.scog.findFloor(to);
+	var start=me.scog.findFloor(from);
+	
+	console.log('Path Finder: '+JSON.stringify({from:from, to:to}));
+	
+	var path=me.astar(start, goal);
+	me.scog.printFloorplan(me.scog.coordsToFloorplan(path));
+	
+	//TODO: start following this path
+	
+	
+}
 /**
  * create a route from point to dest. 
+ * 
+ * astar(scog.findFloor(start), scog.findFloor(goal));
+ * 
  */
-Pathfinder.prototype.route=function(from, to, time, callback){
-	
-	
+Pathfinder.prototype.astar=function(from, to){
+
 	//Here is an implementation of the A* shortest path algorithm.
 	//Pathfinder.route(...) is called by movement (me-movement.js) 
 	//when walkTo or runTo encounters an object that it cannot walk 
@@ -36,25 +98,15 @@ Pathfinder.prototype.route=function(from, to, time, callback){
 	
 	var me=this;
 	
-	// goal is the grid coordinates of to. eg to.x might be -176.5 then goal.x is -177
-	// similarly start is the grid coordinate of from. 
-	var goal=me.scog.findFloor(to);
-	var start=me.scog.findFloor(from);
-	
-	
-	
-	console.log('Path Finder: '+JSON.stringify({from:from, to:to}));
-	
-	
 	var open=[]; //maintain a list of open nodes (positions) 
 	var closed=[]; //same for closed positions. 
 	
 	//assign g, and h values directly to the start object. 
 	//hmm, is .h necessary?
-	start.g=0;
-	start.h=spatial.path2DDistance(start, goal); 
+	from.g=0;
+	from.h=spatial.path2DDistance(from, to); 
 	
-	open.push(start); //will be processed right away and moved into closed
+	open.push(from); //will be processed right away and moved into closed
 	var max=500; //this can be removed once I'm sure that i don't accidentally program an infinite loop
 	var i=0;
 	while(open.length){
@@ -64,22 +116,29 @@ Pathfinder.prototype.route=function(from, to, time, callback){
 		}
 		console.log(i);
 		
+		//c is the position to check during this round.
 		var c=open.shift();
-		if(me.scog.isEqualTo(c, goal)){
+		
+		
+		if(me.scog.isEqualTo(c, to)){
+			//c is the goal, so we are finished. just reconstruct the path from c to start. 
+			//c.parent.parent.parent.... all the way to start.
 			console.log('done reconstruct');
 			
 			
-			var path=[goal];
-	
+			var path=[to];
+			//create a flat list of positions iterating c.parent.parent...etc
 			while(c.parent){
 				path.push({x:c.x, y:c.y, z:c.z}); //discard h, g, and f values 
 				c=c.parent;
 			}
 			
-			me.scog.printFloorplan(me.scog.coordsToFloorplan(path));
 			
-			return;
+			
+			return path;
 		}
+		
+		
 		closed.push(c);
 		
 		
@@ -103,6 +162,7 @@ Pathfinder.prototype.route=function(from, to, time, callback){
 			n.g=c.g+spatial.path2DDistance(c, n);
 			n.h=spatial.path2DDistance({x:n.x+0.5, y:n.y, z:n.z+0.5}, to);
 			n.f=n.g+n.h;
+			
 			if(!me.scog.positionListContains(open, n)){
 				open.push(n);
 			}else{
