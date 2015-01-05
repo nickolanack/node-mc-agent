@@ -57,9 +57,9 @@ function Movement(client, scog){
 		
 		if(me.interval===undefined){
 			
-			//var history=[];
-			//var hc=0;
-			//var hcMax=100;
+			// var history=[];
+			// var hc=0;
+			// var hcMax=100;
 			
 			me.interval=setInterval(function(){
 				if(!me._updateLoop)return;
@@ -91,15 +91,17 @@ function Movement(client, scog){
 						me.currentFloorPositions().forEach(function(coord){
 							floor=Math.max(floor, coord.y);
 						});
-						
-						if(feet-floor>1){
-							me.fall(floor+1);
-						}else if(feet-floor<1){
-							//hmm burried?
-						}else{
-							
+						if(floor!=-1){
 							if(feet-floor>1){
-								//me.position.y=Math.round(me.position.y);
+								console.log('found floor to be: '+floor+' while feet are at: '+feet);
+								me.fall(floor+1);
+							}else if(feet-floor<1){
+								// hmm buried?
+							}else{
+								
+								if(feet-floor>1){
+									// me.position.y=Math.round(me.position.y);
+								}
 							}
 						}
 		
@@ -510,7 +512,8 @@ Movement.prototype.canMoveTo=function(p){
 	var coords=me.scog.floorPositionsAlongWidePath(me._span_r, s, e);
 	
 	//me.scog.printFloorplan(me.scog.coordsToFloorplan(coords));
-	/*me.scog.printFloorplan(me.scog.coordsToFloorplan(coords),function(b,x,z){
+	/*
+	 * me.scog.printFloorplan(me.scog.coordsToFloorplan(coords),function(b,x,z){
 		if(b===null){
 			return '[   ]';
 		}
@@ -524,7 +527,7 @@ Movement.prototype.canMoveTo=function(p){
 		var y0=coords[i-1].y;
 		var y1=coords[i].y;
 		if(y1-y0>maxJump){
-			console.log('too high');
+			console.log('too high '+JSON.stringify([{x:coords[i-1].x, z:coords[i-1].z},{x:coords[i].x, z:coords[i].z}]));
 			
 //			console.log('floor path: '+JSON.stringify([s, e]));
 //			
@@ -633,9 +636,21 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 	
 	if(!me.canMoveTo(point)){
 		if(pathfinder){
+			if(me._isPathFinding){
+				console.log('already routefinding');
+				return me;
+			}
+			me._isPathFinding=true;
 			//pathfinder should be a simple object
 			//takes over, and fires the callback 
-			pathfinder.route(start, point, time, callback);
+			pathfinder.route(start, point, time, function(point, time, callback){
+				console.log('Iterate Route: '+JSON.stringify(point));
+				me._moving=false;
+				me.moveToward(point, null, time, velocity, function(){
+					me._isPathFinding=false;
+					callback();
+				});
+			}, callback);
 			return me;
 		}
 		
@@ -781,19 +796,17 @@ Movement.prototype.moveToward=function(point, pathfinder, time, velocity, callba
 	return me;
 };
 
-//2d measurement
+//2D measurement
 Movement.prototype.measureTo=function(p){
 	var me=this;
-	return Math.sqrt(Math.pow(p.x-me.position.x, 2)+Math.pow(p.z-me.position.z, 2));
-	
+	return spatial.path2D.measure(me.position, p);
 };
 
-Movement.prototype.measure3dTo=function(p){
+//3D measurement
+Movement.prototype.measure3DTo=function(p){
 	var me=this;
-	return Math.sqrt(Math.pow(p.x-me.position.x, 2)+Math.pow(p.z-me.position.z, 2)+Math.pow(p.y-me.position.y, 2));
-	
+	return spatial.path3D.measure(me.position, p);
 };
-
 
 Movement.SneekSpeed=2;
 Movement.WalkSpeed=3.5;

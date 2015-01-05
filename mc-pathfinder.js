@@ -70,7 +70,7 @@ Pathfinder.prototype.setNeighbourFunction=function(f){
 };
 
 
-Pathfinder.prototype.route=function(from, to, time, callback){
+Pathfinder.prototype.route=function(from, to, time, iterate, callback){
 	var me=this;
 	var goal=me.scog.findFloor(to);
 	var start=me.scog.findFloor(from);
@@ -82,12 +82,20 @@ Pathfinder.prototype.route=function(from, to, time, callback){
 		
 	}else{
 		me.scog.printFloorplan(me.scog.coordsToFloorplan(path));
+		
+		var step=function(){
+			if(path.length){
+				
+				iterate(spatial.point3D.add(spatial.point2D.center(path.shift()),{y:1}), time, step);
+			}else if(callback){
+				callback();
+			}
+		}
 		path.forEach(function(p){
 			console.log(JSON.stringify({x:p.x, z:p.z}));
 		});
-		if(callback){
-			setTimeout(callback, 15000)
-		}
+		
+		step();
 	}
 	
 	//TODO: start following this path
@@ -144,9 +152,7 @@ Pathfinder.prototype.astar=function(from, to){
 				c=c.parent;
 			}
 			
-			
-			
-			return path;
+			return path.reverse();
 		}
 		
 		
@@ -161,16 +167,25 @@ Pathfinder.prototype.astar=function(from, to){
 		}
 		console.log(JSON.stringify(neighbors));
 		neighbors.forEach(function(n){
-			if(me.scog.positionListContains(closed, n)||(c.y-n.y)!=0){
+			
+			if(spatial.points3D.setContains(closed,n)){
 				//console.log('skip '+JSON.stringify(n));
-				
 				return;
 			}
 			
 			var dx=c.x-n.x;
 			var dz=c.z-n.z;
+			var dy=n.y-c.y;
+			
 			
 			if(dx!=0&&dz!=0){
+				//this should never happen. ie: neighbor is the same cell
+				return;
+			}
+			
+			if(dy>2||dy<-4){
+				console.log('discard too high: '+c.y+' '+n.y+' '+dy);
+				//neighbor is too high or low
 				return;
 			}
 			
@@ -179,9 +194,19 @@ Pathfinder.prototype.astar=function(from, to){
 			n.h=spatial.path2D.measure({x:n.x+0.5, y:n.y, z:n.z+0.5}, {x:to.x+0.5, y:to.y, z:to.z+0.5});
 			n.f=n.g+n.h;
 			
-			if(!me.scog.positionListContains(open, n)){
+			//confusing, setIndexOf gets the index of item in set. change to indexOfInSet
+			var openi=spatial.points3D.setIndexOf(open, n);
+			if(openi==-1){
 				open.push(n);
 			}else{
+				console.log('n is already been put in open list');
+				
+				if(n.g<open[openi].g){
+					console.log('but this one is better');
+					//replace item in open list
+					open.splice(openi, 1, n);
+				}
+				
 				//check item in open list and compare 'g' if
 				//this g is less then replace.
 			}

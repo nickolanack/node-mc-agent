@@ -81,57 +81,57 @@ assert.deepEqual(
 
 //positive slope in z=0. 
 assert.deepEqual(
-		{x:0.25,y:0,z:0}, //0.25
-		spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:1.5})
-		);
+	{x:0.25,y:0,z:0}, //0.25
+	spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:1.5})
+);
 
 
 assert.deepEqual(
-		{x:0.75,y:0,z:1},
-		spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:1.5})
-		);
+	{x:0.75,y:0,z:1},
+	spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:1.5})
+);
 
 
 //positive slope in z=1. 
 assert.deepEqual(
-		{x:0.25,y:0,z:1}, //0.25
-		spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:1.5},{x:1,y:0,z:-0.5})
-		);
+	{x:0.25,y:0,z:1}, //0.25
+	spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:1.5},{x:1,y:0,z:-0.5})
+);
 
 
 assert.deepEqual(
-		{x:0.75,y:0,z:0},
-		spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:1.5},{x:1,y:0,z:-0.5})
-		);
+	{x:0.75,y:0,z:0},
+	spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:1.5},{x:1,y:0,z:-0.5})
+);
 
 
 assert.deepEqual(
-		{x:2/3,y:0,z:0},
-		spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:2},{x:1,y:0,z:-1})
-		);
+	{x:2/3,y:0,z:0},
+	spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:2},{x:1,y:0,z:-1})
+);
 
 //in x=0 out z=1
 
 assert.deepEqual(
-		{x:0,y:0,z:0.5}, 
-		spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:-0.5,y:0,z:0},{x:1,y:0,z:1.5})
-		);
+	{x:0,y:0,z:0.5}, 
+	spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:-0.5,y:0,z:0},{x:1,y:0,z:1.5})
+);
 
 assert.deepEqual(
-		{x:0.5,y:0,z:1}, 
-		spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:-0.5,y:0,z:0},{x:1,y:0,z:1.5})
-		);
+	{x:0.5,y:0,z:1}, 
+	spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:-0.5,y:0,z:0},{x:1,y:0,z:1.5})
+);
 
 //in z=0 out x=1
 assert.deepEqual(
-		{x:0.5,y:0,z:0}, 
-		spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:0.5})
-		);
+	{x:0.5,y:0,z:0}, 
+	spatial.path2D.entersBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:0.5})
+);
 
 assert.deepEqual(
-		{x:1,y:0,z:0.5}, 
-		spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:0.5})
-		);
+	{x:1,y:0,z:0.5}, 
+	spatial.path2D.exitsBlockAt({x:0,y:0,z:0},{x:0,y:0,z:-0.5},{x:1,y:0,z:0.5})
+);
 
 var fn=spatial.path2D.functions({x:0,y:0,z:0},{x:5,y:0,z:5});
 var tangents=spatial.path2D.contraintPaths(0.3, {x:0,y:0,z:0},{x:5,y:0,z:5});
@@ -140,20 +140,22 @@ var fn1=spatial.path2D.functions(tangents[1][0], tangents[1][1]);
 
 //console.log(JSON.stringify([fn, fn0, fn1]));
 
-
-
 assert.equal(fn0.offset,-0.3/Math.cos(Math.PI/4))
 assert.equal(fn1.offset,+0.3/Math.cos(Math.PI/4))
 
-
 assert(spatial.path2D.pathsAreParallel(tangents[0],[{x:0,y:0,z:0},{x:5,y:0,z:5}]));
 assert(spatial.path2D.pathsAreParallel(tangents[1],[{x:0,y:0,z:0},{x:5,y:0,z:5}]));
-
 
 assert.deepEqual(spatial.point3D.floor({x:0.5, y:0.5, z:0.5}),{x:0, y:0, z:0});
 assert.deepEqual(spatial.point3D.ceil({x:0.5, y:-0.5, z:0.5}),{x:1, y:0, z:1});
 assert.deepEqual(spatial.point3D.center({x:10.3, y:-5.9, z:0.7}),{x:10.5, y:-5.5, z:0.5});
 
+//y is ignored in the following.
+assert.deepEqual(spatial.point2D.floor({x:0.5, y:0.5, z:0.5}),{x:0, y:0.5, z:0});
+assert.deepEqual(spatial.point2D.ceil({x:0.5, y:-0.5, z:0.5}),{x:1, y:-0.5, z:1});
+assert.deepEqual(spatial.point2D.center({x:10.3, y:-5.9, z:0.7}),{x:10.5, y:-5.9, z:0.5});
+
+assert.deepEqual(spatial.point3D.add({x:3, y:2, z:1},{x:1, y:2, z:3}), {x:4, y:4, z:4});
 
 //ensure that sliceAt contains correct number of cells
 assert.equal(spatial.grid2D.sliceAt({x:0,y:0,z:0}, 1).length, 9); 

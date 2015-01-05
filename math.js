@@ -356,6 +356,28 @@ function grid3DCenter(pos){
 	return {x:Math.floor(pos.x)+0.5, y:Math.floor(pos.y)+0.5, z:Math.floor(pos.z)+0.5};
 }
 
+function point3DAdd(pos, offset){
+	
+	if(offset.x===undefined)offset.x=0;
+	if(offset.y===undefined)offset.y=0;
+	if(offset.z===undefined)offset.z=0;
+	
+	return {x:pos.x+offset.x, y:pos.y+offset.y, z:pos.z+offset.z};
+}
+
+
+function grid2DFloor(pos){
+	return {x:Math.floor(pos.x), y:pos.y, z:Math.floor(pos.z)};
+}
+
+function grid2DCeil(pos){
+	return {x:Math.ceil(pos.x), y:pos.y, z:Math.ceil(pos.z)};
+}
+
+function grid2DCenter(pos){
+	return {x:Math.floor(pos.x)+0.5, y:pos.y, z:Math.floor(pos.z)+0.5};
+}
+
 
 function grid3DCompareCells(a, b){
 
@@ -404,10 +426,15 @@ function grid2DSliceAt(point, rad){
 
 
 function set3DContains(a, b){
-	for(var i=0;i<a.length;i++){
-		if(grid3DCompareCells(a[i],b))return true;
-	}
+	if(set3DIndexOf(a,b)>=0)return true;
 	return false;
+}
+
+function set3DIndexOf(a, b){
+	for(var i=0;i<a.length;i++){
+		if(grid3DCompareCells(a[i],b))return i;
+	}
+	return -1;
 }
 
 function set3DDifference(a, b){
@@ -503,22 +530,36 @@ module.exports = {
 			floor:grid3DFloor,
 			ceil:grid3DCeil,
 			center:grid3DCenter,
+			add:point3DAdd
+
+		},
+		point2D:{
+
+			floor:grid2DFloor,
+			ceil:grid2DCeil,
+			center:grid2DCenter,
 
 		},
 		points3D:{
+			
 			floorEquals:grid3DCompareCells,
 			setDifference:set3DDifference,
 			setUnion:set3DUnion,
-			setContains:set3DContains
+			setContains:set3DContains,
+			setIndexOf:set3DIndexOf
+			
 		},
 		points2D:{
+			
 			floorEquals:grid2DCompareCells,
 			setDifference:set2DDifference,
 			setUnion:set2DUnion,
 			setContains:set2DContains
+			
 		},
 		grid2D:{
-			sliceAt:grid2DSliceAt //returns an array of coordinates {x,y,z} defining all the cell positions of a square around a center point
+			
+			sliceAt:grid2DSliceAt //returns an array of coordinates {x,y,z} defining all the cell positions of a square around a center point			
 		}
 
 
