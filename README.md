@@ -1,3 +1,7 @@
+This project is closed. and will disapear.
+
+
+
 ##Node Minecraft Agent##
 
 *node-minecraft-agent is an artificial-intellegent player for minecraft named 'morpheus'*
